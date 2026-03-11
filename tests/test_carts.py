@@ -1,8 +1,50 @@
+import responses
+
 from services.cart_service import CartService
 from utils.performance import validate_response_time
 from factories.cart_factory import CartFactory
+from tests.mock_api import mock_carts_api
 
+def mock_carts_api():
+
+    responses.add(
+        responses.GET,
+        "https://fakestoreapi.com/carts",
+        json=[
+            {
+                "id": 1,
+                "userId": 1,
+                "products": [{"productId": 1, "quantity": 2}]
+            }
+        ],
+        status=200
+    )
+
+    responses.add(
+        responses.GET,
+        "https://fakestoreapi.com/carts/1",
+        json={
+            "id": 1,
+            "userId": 1,
+            "products": [{"productId": 1, "quantity": 2}]
+        },
+        status=200
+    )
+
+    responses.add(
+        responses.POST,
+        "https://fakestoreapi.com/carts",
+        json={
+            "id": 5,
+            "userId": 1,
+            "products": [{"productId": 1, "quantity": 2}]
+        },
+        status=201
+    )
+@responses.activate
 def test_get_all_carts():
+
+    mock_carts_api()
 
     response = CartService.get_all_carts()
 
@@ -17,7 +59,10 @@ def test_get_all_carts():
     assert len(carts) > 0
 
 
+@responses.activate
 def test_get_single_cart():
+
+    mock_carts_api()
 
     response = CartService.get_cart(1)
 
@@ -31,9 +76,13 @@ def test_get_single_cart():
 
     assert "userId" in cart
 
+
+@responses.activate
 def test_create_cart():
 
     payload = CartFactory.create()
+
+    mock_carts_api()
 
     response = CartService.create_cart(payload)
 

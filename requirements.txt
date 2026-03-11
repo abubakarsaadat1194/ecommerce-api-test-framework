@@ -4,3 +4,4 @@ faker
 pydantic
 pytest-html
 pytest-xdist
+responses
