@@ -29,4 +29,4 @@ jobs:
 
       - name: Run API tests
         run: |
-          pytest -v -n 4 --html=report.html
+          pytest -v --html=report.html
